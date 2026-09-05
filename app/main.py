@@ -1,4 +1,4 @@
-from fastapi import FastAPI, Depends, HTTPException
+from fastapi import FastAPI, Depends, HTTPException, Query
 from sqlalchemy.orm import Session
 from app.models import StudentCreate,StudentUpdate, StudentResponse
 from app.database import get_db
@@ -18,7 +18,7 @@ def create_new_student(student: StudentCreate, db: Session = Depends(get_db)):
         raise HTTPException(status_code=400, detail=str(e))
 
 @app.get("/students/", response_model=list[StudentResponse])
-def read_students(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
+def read_students(skip: int = Query(0, ge=0), limit: int = Query(100, ge=1, le=100), db: Session = Depends(get_db)):
     return get_students(db, skip, limit)
 
 @app.get("/students/{student_id}", response_model=StudentResponse)
