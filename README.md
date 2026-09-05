@@ -1,49 +1,107 @@
-# Student-Management-System
+# Student Management System
 
-A super fast REST API to manage student records. Built with **FastAPI** and includes a built-in **Admin Dashboard** to manage the database easily.
+A simple REST API and Streamlit interface for managing student records.
 
-## The Stack
+## Tech Stack
 
-* **Framework:** FastAPI
-* **Database:** SQLite (via SQLAlchemy)
-* **Admin Panel:** SQLAdmin
-* **Validation:** Pydantic
+* Python
+* FastAPI
+* SQLAlchemy
+* SQLite
+* Pydantic
+* Streamlit
 
-## How to Run
+## Features
 
-1.  **Install dependencies**
-    ```bash
-    pip install fastapi uvicorn sqlalchemy sqladmin pydantic[email]
-    ```
+* Add a student
+* View all students
+* Search for a student by ID
+* Update student information
+* Delete a student
+* Email validation
+* Duplicate email handling
+* API documentation with Swagger UI
 
-2.  **Start the server**
-    ```bash
-    uvicorn main:app --reload
-    ```
+## Project Structure
 
-3.  **That's it!** The API is now running at `http://127.0.0.1:8000`.
+```text
+student-management-system/
+├── app/
+│   ├── __init__.py
+│   ├── main.py
+│   ├── database.py
+│   ├── models.py
+│   └── crud.py
+├── ui.py
+├── requirements.txt
+├── README.md
+└── .gitignore
+```
 
-## Features & Routes
+## Setup
 
-Here is what you can do with the API:
+Create and activate a virtual environment:
 
-| Method | Route | Action |
-| :--- | :--- | :--- |
-| `GET` | `/students/` | View all students |
-| `POST` | `/students/` | Add a new student |
-| `PUT` | `/students/{id}` | Update info |
-| `DELETE` | `/students/{id}` | Remove student |
+```bash
+python -m venv .venv
+```
 
-### Admin Dashboard
-This project comes with a pre-built GUI to manage your database.
-**Go to:** `http://127.0.0.1:8000/admin`
+Activate it on Windows:
 
-### API Docs
-Automatic documentation is generated for you.
-**Swagger UI:** `http://127.0.0.1:8000/docs`
+```bash
+.venv\Scripts\activate
+```
 
-## JSON Example
-To create a student, send this JSON to the `POST` route:
+Install the dependencies:
+
+```bash
+pip install -r requirements.txt
+```
+
+## Run the API
+
+Start the FastAPI server:
+
+```bash
+uvicorn app.main:app --reload
+```
+
+The API will be available at:
+
+```text
+http://127.0.0.1:8000
+```
+
+## Run the Streamlit UI
+
+In a separate terminal:
+
+```bash
+streamlit run ui.py
+```
+
+## API Endpoints
+
+| Method | Route                    | Description       |
+| ------ | ------------------------ | ----------------- |
+| GET    | `/`                      | Check API status  |
+| POST   | `/students/`             | Add a student     |
+| GET    | `/students/`             | View all students |
+| GET    | `/students/{student_id}` | Get a student     |
+| PUT    | `/students/{student_id}` | Update a student  |
+| DELETE | `/students/{student_id}` | Delete a student  |
+
+## API Documentation
+
+Swagger UI:
+
+```text
+http://127.0.0.1:8000/docs
+```
+
+## Example Request
+
+Create a student using `POST /students/`:
 
 ```json
 {
@@ -53,3 +111,4 @@ To create a student, send this JSON to the `POST` route:
   "semester": 5,
   "email": "ali123@gmail.com"
 }
+```
