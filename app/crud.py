@@ -4,7 +4,7 @@ from app.database import Student
 from app.models import StudentCreate, StudentUpdate
 
 def create_student(db: Session, student: StudentCreate):
-    new_student = Student(**student.dict())
+    new_student = Student(**student.model_dump())
     db.add(new_student)
     try:
         db.commit()
@@ -24,7 +24,7 @@ def update_student(db: Session, student_id: int, data: StudentUpdate):
     student = db.query(Student).filter(Student.id == student_id).first()
     if not student:
         return None
-    for key, value in data.dict(exclude_unset=True).items():
+    for key, value in data.model_dump(exclude_unset=True).items():
         setattr(student, key, value)
     try:
         db.commit()
