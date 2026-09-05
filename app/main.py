@@ -1,0 +1,39 @@
+from fastapi import FastAPI, Depends, HTTPException
+from sqlalchemy.orm import Session
+from app.models import StudentCreate,StudentUpdate, StudentResponse
+from app.database import get_db
+from app.crud import create_student, get_students, update_student, delete_student
+
+app = FastAPI()
+
+@app.get("/")
+def health_check():
+    return {"message": "API running successfully!"}
+
+@app.post("/students/", response_model=StudentResponse)
+def create_new_student(student: StudentCreate, db: Session = Depends(get_db)):
+    try:
+        return create_student(db, student)
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
+
+@app.get("/students/", response_model=list[StudentResponse])
+def read_students(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
+    return get_students(db, skip, limit)
+
+@app.put("/students/{student_id}", response_model=StudentResponse)
+def update_student_data(student_id: int, student_data: StudentUpdate, db: Session = Depends(get_db)): 
+    try:
+        updated = update_student(db, student_id, student_data)
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
+    return updated
+
+@app.delete("/students/{student_id}")
+def delete_student_data(student_id: int, db: Session = Depends(get_db)):
+    result = delete_student(db, student_id)
+    if not result:
+        raise HTTPException(status_code=404, detail="Student not found")
+    return {"message": "Student deleted successfully"}
+
+from app import admin
