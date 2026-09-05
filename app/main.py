@@ -2,7 +2,7 @@ from fastapi import FastAPI, Depends, HTTPException
 from sqlalchemy.orm import Session
 from app.models import StudentCreate,StudentUpdate, StudentResponse
 from app.database import get_db
-from app.crud import create_student, get_students, update_student, delete_student
+from app.crud import create_student, get_student, get_students, update_student, delete_student
 
 app = FastAPI()
 
@@ -20,6 +20,13 @@ def create_new_student(student: StudentCreate, db: Session = Depends(get_db)):
 @app.get("/students/", response_model=list[StudentResponse])
 def read_students(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
     return get_students(db, skip, limit)
+
+@app.get("/students/{student_id}", response_model=StudentResponse)
+def read_student(student_id: int, db: Session = Depends(get_db)):
+    student = get_student(db, student_id)
+    if not student:
+        raise HTTPException(status_code=404, detail="Student not found")
+    return student
 
 @app.put("/students/{student_id}", response_model=StudentResponse)
 def update_student_data(student_id: int, student_data: StudentUpdate, db: Session = Depends(get_db)): 
