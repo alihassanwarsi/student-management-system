@@ -34,6 +34,8 @@ def update_student_data(student_id: int, student_data: StudentUpdate, db: Sessio
         updated = update_student(db, student_id, student_data)
     except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e))
+    if not updated:
+        raise HTTPException(status_code=404, detail="Student not found")
     return updated
 
 @app.delete("/students/{student_id}")
