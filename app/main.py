@@ -44,5 +44,3 @@ def delete_student_data(student_id: int, db: Session = Depends(get_db)):
     if not result:
         raise HTTPException(status_code=404, detail="Student not found")
     return {"message": "Student deleted successfully"}
-
-from app import admin
